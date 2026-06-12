@@ -1,0 +1,611 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5023b1a2-b76a-4554-b2bf-076f206563f4",
+              "name": "type ",
+              "value": "digest ",
+              "type": "string"
+            },
+            {
+              "id": "d50a2ae3-93a3-47b2-9364-3c96dbf2c3bf",
+              "name": "source ",
+              "value": "schedule ",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2032,
+        688
+      ],
+      "id": "b65882b5-82b3-4e5d-8b32-dc65dcd722de",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1967b5b8-a590-4a65-b862-63cfb504beeb",
+              "name": "message ",
+              "value": "Hello from n8n desktop and discord!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -304,
+        656
+      ],
+      "id": "1554e84c-ae59-45e7-a160-30e9c5f51e8c",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://discordapp.com/api/webhooks/1514569925606244493/6t-6EVYbh8Hjzduil_E7YKKbLUdeCcEFYNuwX3GebaX9YCp5U-cSG4y0Hwwvo8DJIMha",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"{{ $json['message '] }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -352,
+        -48
+      ],
+      "id": "3fa81288-fb37-4933-a254-3a1642af38d4",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Summarize these news articles into a Discord-friendly format.\n\nKeep it under 500 words.\n\nUse emojis.\n\nInclude bullet points.",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "HumanMessagePromptTemplate",
+              "message": "Summarize these news articles into a Discord-friendly format.  Keep it under 500 words.  Use emojis.  Include bullet points."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1584,
+        672
+      ],
+      "id": "cb62d010-9970-4e87-889d-66164959ac79",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1744,
+        528
+      ],
+      "id": "cae08659-2668-480c-9602-ac056c66b10a",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "UANwG7XdUZAbcG8c",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=Hello from owner  {{ $json.text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1952,
+        144
+      ],
+      "id": "4fdf94fd-9631-4d49-8870-440bf99f5223",
+      "name": "Discord",
+      "webhookId": "66abd7a6-fecf-4ba7-920f-589efd0ffd94",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "qboJQdjw23yV897Q",
+          "name": "Discord Webhook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -320,
+        288
+      ],
+      "id": "f27abc46-67e0-4582-9c56-3a0fb3ed2a1d",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        592,
+        96
+      ],
+      "id": "a8046ae1-6ca4-4f68-b5f3-d40d558a4bab",
+      "name": "Merge"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        784,
+        240
+      ],
+      "id": "fd1f2244-2450-4fe3-8330-a4af05b57b0b",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "url": "https://gnews.io/api/v4/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "india"
+            },
+            {
+              "name": "lang",
+              "value": "en"
+            },
+            {
+              "name": "country",
+              "value": "in"
+            },
+            {
+              "name": "max ",
+              "value": "5"
+            },
+            {
+              "name": "apikey",
+              "value": "2d69b86b23b1c59f7fe3fa7f21eff86b"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        272,
+        288
+      ],
+      "id": "69ae24ca-298a-4ab3-87a5-3b3c53d899af",
+      "name": "HTTP India"
+    },
+    {
+      "parameters": {
+        "url": "https://gnews.io/api/v4/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "Technology"
+            },
+            {
+              "name": "lang",
+              "value": "en"
+            },
+            {
+              "name": "country",
+              "value": "in"
+            },
+            {
+              "name": "max ",
+              "value": "5"
+            },
+            {
+              "name": "apikey",
+              "value": "2d69b86b23b1c59f7fe3fa7f21eff86b"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        272,
+        96
+      ],
+      "id": "6fe1e141-3ccf-4bcf-a6a2-89ac96bdca45",
+      "name": "HTTP Tech"
+    },
+    {
+      "parameters": {
+        "url": "https://gnews.io/api/v4/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "artificial intelligence"
+            },
+            {
+              "name": "lang",
+              "value": "en"
+            },
+            {
+              "name": "country",
+              "value": "in"
+            },
+            {
+              "name": "max ",
+              "value": "5"
+            },
+            {
+              "name": "apikey",
+              "value": "2d69b86b23b1c59f7fe3fa7f21eff86b"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        272,
+        -96
+      ],
+      "id": "80b9b867-37dd-4d10-bea5-420e913cadb0",
+      "name": "HTTP Ai"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        976,
+        368
+      ],
+      "id": "9c2485fa-9a2c-4c7c-8a05-c05ce0e27a96",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "jsCode": "let message = \"📰 Daily Intelligence Report\\n\\n\";\n\nfor (const item of $input.all()) {\n  message += \"• \" + item.json.title + \"\\n\";\n}\n\nreturn [\n  {\n    json: {\n      message\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1312,
+        720
+      ],
+      "id": "6d1ad4ef-cf01-45fd-b12d-ceb60b302763",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "url": "https://gnews.io/api/v4/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "business"
+            },
+            {
+              "name": "lang",
+              "value": "en"
+            },
+            {
+              "name": "country",
+              "value": "in"
+            },
+            {
+              "name": "max ",
+              "value": "5"
+            },
+            {
+              "name": "apikey",
+              "value": "2d69b86b23b1c59f7fe3fa7f21eff86b"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        288,
+        496
+      ],
+      "id": "1a614706-2693-40bc-9a56-db2756e1641f",
+      "name": "HTTP Business"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1136,
+        560
+      ],
+      "id": "4c84d09a-eac8-47b5-8b5a-57dcb9ff49d1",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {
+        "url": "https://gnews.io/api/v4/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "Startups"
+            },
+            {
+              "name": "lang",
+              "value": "en"
+            },
+            {
+              "name": "country",
+              "value": "in"
+            },
+            {
+              "name": "max ",
+              "value": "5 "
+            },
+            {
+              "name": "apikey",
+              "value": "2d69b86b23b1c59f7fe3fa7f21eff86b"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        288,
+        704
+      ],
+      "id": "187796ec-d9a1-4350-8cf5-f154d6c910db",
+      "name": "HTTP Startup's"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Ai",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Tech",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP India",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Business",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Startup's",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        []
+      ]
+    },
+    "HTTP India": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "HTTP Tech": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "HTTP Ai": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Business": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Startup's": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "db1aeadb-9a0f-48f4-9824-ee03e342fe55",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2f6007bb7acb601faf925c5a7b77b2c78223e266190c7c25ba071fba311ff826"
+  },
+  "nodeGroups": [],
+  "id": "s4mVMc2Ah88sMssz",
+  "tags": []
+}
