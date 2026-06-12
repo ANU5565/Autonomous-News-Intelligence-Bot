@@ -84,7 +84,9 @@ The bot currently collects news from:
 
 ---
 
-# 📸 Example Output
+# 📸 Example Output  :
+
+![n8n Workflow](./n8n.png)
 
 ```
 📰 DAILY INTELLIGENCE REPORT
